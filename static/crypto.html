@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="主流虚拟币实时行情"><title>虚拟币行情 · 衡镜</title>
+  <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/terminal.css"><link rel="stylesheet" href="/theme-dark.css"><link rel="stylesheet" href="/crypto.css"><link rel="stylesheet" href="/crypto-enhanced.css">
+</head>
+<body class="terminal-body crypto-body">
+  <header class="topbar terminal-topbar">
+    <a class="brand" href="/"><span class="brand-mark">衡</span><span>衡镜</span></a>
+    <nav class="main-nav"><a href="/">选股</a><a href="/#sectorModule">板块</a><a href="/#watchlistModule">自选</a><a class="active" href="/crypto.html">虚拟币</a></nav>
+    <div class="crypto-live"><i></i><span id="cryptoMode">连接行情源…</span></div><button class="button ghost" id="refreshCrypto">立即刷新</button>
+  </header>
+
+  <main class="crypto-main">
+    <section class="crypto-titlebar">
+      <div><p>CRYPTO TERMINAL</p><h1>虚拟币市场</h1><span>美元计价 · 每 15 秒自动刷新 · 点击币种进入独立行情页</span></div>
+      <label class="crypto-search">⌕<input id="cryptoSearch" type="search" placeholder="搜索币种或代码"></label>
+    </section>
+
+    <section class="crypto-stats">
+      <article><span>追踪市值</span><strong id="cryptoMarketCap">—</strong><small>主流币合计</small></article>
+      <article><span>24H 成交额</span><strong id="cryptoVolume">—</strong><small>主流币合计</small></article>
+      <article><span>上涨 / 下跌</span><strong><em id="cryptoUp">—</em> / <b id="cryptoDown">—</b></strong><small>按24小时涨跌</small></article>
+      <article><span>更新时间</span><strong id="cryptoUpdatedAt">—</strong><small id="cryptoSource">等待数据</small></article>
+    </section>
+
+    <div class="crypto-workspace">
+      <aside class="crypto-market-nav">
+        <header><strong>市场分类</strong><small>MARKETS</small></header>
+        <button class="active" data-crypto-category="all"><span>全部币种</span><b id="allCoinCount">0</b></button>
+        <button data-crypto-category="major"><span>主流币</span><b>TOP 8</b></button>
+        <button data-crypto-category="stable"><span>稳定币</span><b>USD</b></button>
+        <button data-crypto-category="favorite"><span>我的收藏</span><b id="favoriteCoinCount">0</b></button>
+        <div class="market-nav-note"><i></i><p>收藏状态保存在当前浏览器</p></div>
+      </aside>
+
+      <div class="crypto-center">
+        <section class="crypto-leaders" id="cryptoLeaders"></section>
+        <section class="crypto-table-panel">
+          <header><div><strong>币种行情</strong><span id="cryptoCount">0 个币种</span></div><div class="crypto-legend"><i></i> 实时源优先，失败时自动降级</div></header>
+          <div class="crypto-table-wrap">
+            <table class="crypto-table">
+              <thead><tr><th>#</th><th>币种</th><th data-crypto-sort="price">价格</th><th data-crypto-sort="change_1h">1H</th><th data-crypto-sort="change_24h">24H</th><th data-crypto-sort="change_7d">7D</th><th data-crypto-sort="market_cap">市值</th><th data-crypto-sort="volume_24h">24H成交额</th><th>近7日走势</th><th>操作</th></tr></thead>
+              <tbody id="cryptoRows"><tr><td colspan="10" class="crypto-loading">正在连接虚拟币行情…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <aside class="crypto-movers">
+        <header><strong>市场异动</strong><small>24H</small></header>
+        <section><h2>涨幅榜</h2><ol id="cryptoGainers"><li>加载中…</li></ol></section>
+        <section><h2>跌幅榜</h2><ol id="cryptoLosers"><li>加载中…</li></ol></section>
+        <div class="crypto-risk"><strong>风险提示</strong><p>虚拟币波动剧烈，本页面不提供交易服务。</p></div>
+      </aside>
+    </div>
+    <p class="crypto-disclaimer">数据仅供行情展示，不构成投资建议；免费行情源不等同于交易所逐笔实时数据。</p>
+  </main>
+  <footer class="terminal-footer"><p><i></i> 行情页面</p><p>衡镜量化终端</p></footer>
+  <div id="toast" role="status"></div><script src="/crypto.js"></script>
+</body>
+</html>
+

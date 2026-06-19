@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="透明、快速的A股多因子筛选器">
+  <title>衡镜 · A股量化筛选器</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/terminal.css">
+  <link rel="stylesheet" href="/theme-dark.css">
+</head>
+<body class="terminal-body">
+  <header class="topbar terminal-topbar">
+    <a class="brand" href="/" aria-label="衡镜首页"><span class="brand-mark">衡</span><span>衡镜</span></a>
+    <nav class="main-nav" aria-label="主导航">
+      <button>行情</button><button class="active">选股</button><button data-scroll="sectorModule">板块</button><button>数据</button><button data-scroll="watchlistModule">自选</button><a href="/crypto.html">虚拟币</a>
+    </nav>
+    <div class="top-search"><span>⌕</span><input id="topKeyword" type="search" placeholder="输入代码 / 名称 / 拼音"></div>
+    <div class="top-actions">
+      <span class="mode"><i></i>演示行情</span>
+      <button class="button ghost" id="saveStrategy">保存方案</button>
+      <button class="button primary" id="exportCsv">导出</button>
+    </div>
+  </header>
+
+  <div class="ticker-strip">
+    <div class="ticker-label"><strong>主要指数</strong><span>实时</span></div>
+    <div id="marketTicker" class="ticker-items"><span>正在加载行情…</span></div>
+    <div class="ticker-time"><i></i><span>行情刷新</span><time id="tickerUpdatedAt">—</time></div>
+  </div>
+
+  <main class="terminal-main">
+    <section class="terminal-toolbar">
+      <div><span class="crumb">智能选股 /</span><strong>全市场筛选器</strong><em>Beta</em></div>
+      <div class="universe-inline"><span>股票池</span><strong id="universeCount">—</strong><small>只</small></div>
+    </section>
+
+    <div class="terminal-grid">
+      <aside class="left-rail">
+        <section class="templates" aria-label="策略模板">
+          <header><strong>策略导航</strong><small>PRESETS</small></header>
+          <button data-template="hotStocks"><span>01</span><strong>股票热度排行</strong><small>换手 · 量比 · 动量</small></button>
+          <button data-template="growth"><span>02</span><strong>质量成长</strong><small>增长 · 现金流</small></button>
+          <button data-template="momentum"><span>03</span><strong>趋势动量</strong><small>活跃 · 强势</small></button>
+          <button data-template="balanced"><span>04</span><strong>多因子综合</strong><small>均衡 · 分散</small></button>
+        </section>
+
+        <section class="filters">
+          <div class="panel-title"><div><span>条件筛选</span><small id="conditionCount">0 个条件已启用</small></div><button id="resetFilters">重置</button></div>
+          <label class="search-label">股票名称或代码<input id="keyword" type="search" placeholder="例如：600519 / 茅台"></label>
+          <details open>
+            <summary>热门板块 <em class="heat-tip">热度排序</em></summary>
+            <div id="industryList" class="industry-list"></div>
+            <p class="sector-method" id="sectorMethod"></p>
+          </details>
+          <details open>
+            <summary>估值与规模</summary>
+            <div class="field-grid">
+              <label>最小市值（亿）<input id="min_market_cap" type="number" placeholder="不限"></label>
+              <label>最大市值（亿）<input id="max_market_cap" type="number" placeholder="不限"></label>
+              <label>最低 PE<input id="min_pe" type="number" placeholder="不限"></label>
+              <label>最高 PE<input id="max_pe" type="number" placeholder="不限"></label>
+            </div>
+          </details>
+          <details open>
+            <summary>质量与成长</summary>
+            <div class="field-grid">
+              <label>最低 ROE（%）<input id="min_roe" type="number" placeholder="不限"></label>
+              <label>最高负债率（%）<input id="max_debt_ratio" type="number" placeholder="不限"></label>
+              <label>营收增长 ≥（%）<input id="min_revenue_growth" type="number" placeholder="不限"></label>
+              <label>利润增长 ≥（%）<input id="min_profit_growth" type="number" placeholder="不限"></label>
+              <label>最低换手率（%）<input id="min_turnover_rate" type="number" placeholder="不限"></label>
+              <label>最低综合分<input id="min_score" type="number" min="0" max="100" placeholder="不限"></label>
+            </div>
+          </details>
+          <label class="switch-row"><span><strong>剔除 ST</strong><small>特殊处理股票</small></span><input id="exclude_st" type="checkbox" checked><i></i></label>
+          <label class="switch-row"><span><strong>剔除停牌</strong><small>仅正常交易标的</small></span><input id="exclude_suspended" type="checkbox" checked><i></i></label>
+          <div class="auto-screen-note"><i></i><span><strong>自动筛选已开启</strong><small>条件变化后自动更新</small></span></div>
+        </section>
+      </aside>
+
+      <section class="results center-panel">
+        <div class="results-head">
+          <div><p>选股结果</p><h2><span id="resultCount">—</span> 只股票</h2></div>
+          <div class="result-tools"><button class="active">列表</button><button>紧凑</button><div class="update"><span>数据时间</span><strong id="updatedAt">—</strong></div></div>
+        </div>
+        <div id="activeChips" class="chips"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>股票</th><th data-sort="price">最新价</th><th data-sort="change_pct">涨跌幅</th>
+              <th data-sort="market_cap">总市值</th><th data-sort="pe_ttm">PE</th><th data-sort="roe_ttm">ROE</th>
+              <th data-sort="revenue_growth">营收增长</th><th data-sort="debt_ratio">负债率</th><th data-sort="heat_score">热度</th><th data-sort="score">综合分</th><th>自选</th>
+            </tr></thead>
+            <tbody id="stockRows"><tr><td colspan="11" class="loading">正在加载股票池…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="pagination"><span class="page-total">结果自动更新</span><button id="prevPage">← 上一页</button><span id="pageInfo">第 1 页</span><button id="nextPage">下一页 →</button></div>
+      </section>
+
+      <aside class="right-rail">
+        <section class="watchlist-panel" id="watchlistModule" aria-label="我的自选股">
+          <header class="watchlist-head"><div><strong>我的自选</strong><small>按涨跌幅排序</small></div><span id="watchlistCount">0</span></header>
+          <div id="watchlistRows" class="watchlist-rows"><div class="watchlist-empty">点击股票后的星标，将股票加入自选</div></div>
+        </section>
+        <section class="market-overview" aria-label="大盘实时走势">
+          <div class="market-heading">
+            <div><p class="eyebrow">MARKET</p><h2>大盘走势</h2></div>
+            <div class="live-status"><i></i><time id="marketUpdatedAt">—</time></div>
+          </div>
+          <div class="index-grid" id="indexGrid"><div class="index-loading">加载走势…</div></div>
+        </section>
+        <section class="sector-rankings" id="sectorModule" aria-label="板块涨跌幅排行">
+          <header class="sector-head"><div><strong>板块涨跌排行</strong><small>平均涨跌幅</small></div><time id="sectorUpdatedAt">—</time></header>
+          <div class="sector-board">
+            <section><h3>概念板块 <span>CONCEPT</span></h3><ol id="conceptRanking"><li class="rank-loading">加载排行…</li></ol></section>
+            <section><h3>行业板块 <span>INDUSTRY</span></h3><ol id="industryRanking"><li class="rank-loading">加载排行…</li></ol></section>
+          </div>
+        </section>
+        <section class="terminal-notice">
+          <header><strong>数据说明</strong><span>!</span></header>
+          <p>当前为演示行情，指数每 5 秒刷新。接入授权行情后，模块结构无需改变。</p>
+          <div><span>行情状态</span><strong><i></i> 正常</strong></div>
+          <div><span>筛选方式</span><strong>自动</strong></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="terminal-footer"><p><i></i> 数据服务正常</p><p>数据仅供产品演示，不构成投资建议</p><p>衡镜量化终端 MVP</p></footer>
+  <div id="toast" role="status"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
+

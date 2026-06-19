@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>币种行情 · 衡镜</title>
+  <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/terminal.css"><link rel="stylesheet" href="/theme-dark.css"><link rel="stylesheet" href="/crypto.css"><link rel="stylesheet" href="/crypto-enhanced.css">
+</head>
+<body class="terminal-body crypto-body">
+  <header class="topbar terminal-topbar">
+    <a class="brand" href="/"><span class="brand-mark">衡</span><span>衡镜</span></a>
+    <nav class="main-nav"><a href="/">选股</a><a class="active" href="/crypto.html">虚拟币</a></nav>
+    <div class="crypto-live"><i></i><span id="detailMode">连接行情源…</span></div><a class="button ghost detail-back" href="/crypto.html">← 返回市场</a>
+  </header>
+
+  <main class="detail-main">
+    <aside class="detail-market-list">
+      <header><strong>币种列表</strong><small>按市值</small></header>
+      <label>⌕<input id="detailSearch" type="search" placeholder="搜索币种"></label>
+      <div id="detailCoinList"><p class="detail-loading">加载中…</p></div>
+    </aside>
+
+    <section class="detail-center">
+      <header class="detail-quote-head">
+        <div class="detail-identity"><span class="coin-icon" id="detailIcon">—</span><div><h1 id="detailName">加载中…</h1><p><span id="detailSymbol">—</span> / USD <em id="detailRank">—</em></p></div></div>
+        <div class="detail-price"><strong id="detailPrice">—</strong><span id="detailChange">—</span></div>
+      </header>
+      <section class="detail-chart-panel">
+        <header><div><strong>价格走势</strong><small><span id="detailRangeLabel">1小时K线</span> · <span id="detailChartSource">加载中</span></small></div><nav><button data-interval="5m">5分</button><button data-interval="15m">15分</button><button class="active" data-interval="1h">1时</button><button data-interval="4h">4时</button><button data-interval="1d">日线</button><button data-interval="1w">周线</button></nav></header>
+        <div class="detail-chart-meta"><span id="detailChartHigh">高 —</span><span id="detailChartLow">低 —</span></div>
+        <svg id="detailChart" viewBox="0 0 900 370" preserveAspectRatio="none" aria-label="价格走势图"><defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2fc58d" stop-opacity=".24"/><stop offset="1" stop-color="#2fc58d" stop-opacity="0"/></linearGradient></defs><g id="chartGrid"></g><polygon id="detailChartArea" fill="url(#chartFill)"></polygon><polyline id="detailChartLine" fill="none" stroke="#2fc58d" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>
+        <div class="detail-chart-axis"><span id="chartStart">—</span><span id="chartMiddle">—</span><span id="chartEnd">现在</span></div>
+      </section>
+      <section class="detail-stats-grid">
+        <article><span>24H最高</span><strong id="detailHigh">—</strong></article><article><span>24H最低</span><strong id="detailLow">—</strong></article>
+        <article><span>24H成交额</span><strong id="detailVolume">—</strong></article><article><span>总市值</span><strong id="detailCap">—</strong></article>
+        <article><span>1小时涨跌</span><strong id="detail1h">—</strong></article><article><span>7日涨跌</span><strong id="detail7d">—</strong></article>
+      </section>
+    </section>
+
+    <aside class="detail-actions-panel">
+      <header><strong>行情操作</strong><small>不连接交易</small></header>
+      <button class="detail-primary" id="detailFavorite">☆ 加入收藏</button>
+      <button id="detailAlert">◎ 设置价格提醒</button>
+      <button id="detailCopy">⌁ 复制页面链接</button>
+      <section class="detail-range"><h2>24小时价格区间</h2><div><i id="detailRangeBar"></i></div><p><span id="detailRangeLow">—</span><span id="detailRangeHigh">—</span></p></section>
+      <section class="detail-performance"><h2>阶段表现</h2><p><span>1小时</span><strong id="side1h">—</strong></p><p><span>24小时</span><strong id="side24h">—</strong></p><p><span>7天</span><strong id="side7d">—</strong></p></section>
+      <section class="detail-source"><i></i><div><strong id="detailSource">等待行情</strong><small>每15秒自动刷新</small></div></section>
+    </aside>
+  </main>
+  <footer class="terminal-footer"><p><i></i> 单币行情</p><p>仅供信息展示，不提供交易服务</p></footer>
+  <div id="toast" role="status"></div><script src="/crypto-detail.js"></script>
+</body>
+</html>
+
